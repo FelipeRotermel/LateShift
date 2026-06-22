@@ -374,13 +374,13 @@ class StageSelectMenu:
 
         # Medidor visual de dificuldade da IA
         diff = stage["ai_multiplier"]
-        if diff <= 1.1:
+        if diff <= 0.62:
             diff_color = NEON_GREEN
             diff_label = "Easy"
-        elif diff <= 1.3:
+        elif diff <= 0.66:
             diff_color = NEON_YELLOW
             diff_label = "Medium"
-        elif diff <= 1.5:
+        elif diff <= 0.72:
             diff_color = NEON_ORANGE
             diff_label = "Hard"
         else:
@@ -396,6 +396,9 @@ class StageSelectMenu:
         bar_w = 200
         bar_h = 10
         pygame.draw.rect(surface, GRAY_DARK, (bar_x, bar_y, bar_w, bar_h))
-        fill = int(bar_w * min(1.0, (diff - 0.8) / 1.0))
+
+        # Calcula preenchimento proporcional (0.60 -> 25%, 0.75 -> 100%)
+        progress = max(0.0, min(1.0, (diff - 0.55) / 0.20))
+        fill = int(bar_w * progress)
         pygame.draw.rect(surface, diff_color, (bar_x, bar_y, fill, bar_h))
         pygame.draw.rect(surface, GRAY_MED, (bar_x, bar_y, bar_w, bar_h), 1)
