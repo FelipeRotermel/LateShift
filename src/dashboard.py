@@ -175,7 +175,7 @@ class Dashboard:
 
             pygame.draw.rect(surface, danger_color, (bar_x, bar_y, fill_w, bar_h))
             pygame.draw.rect(surface, WHITE, (bar_x, bar_y, bar_w, bar_h), 1)
-            warn = self.font_tiny.render("ENGINE DANGER!", True, danger_color)
+            warn = self.font_tiny.render("Motor em perigo!", True, danger_color)
             surface.blit(warn, (cx - warn.get_width() // 2, bar_y + 8))
 
     def _draw_gear_indicator(self, surface, x, y, car, shifter):
