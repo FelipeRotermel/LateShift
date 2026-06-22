@@ -1,31 +1,28 @@
 """
-Módulo do painel de instrumentos (Dashboard).
-Renderiza o velocímetro, conta-giros, marcha engatada, pedais de controle e o layout do H-Pattern.
+Módulo do painel de instrumentos (Dashboard)
+Renderiza o velocímetro, conta-giros, marcha engatada, pedais de controle e o layout do H-Patter
 """
 
 import math
 import pygame
 from src.constants import (
-    SCREEN_WIDTH, DASHBOARD_Y, DASHBOARD_HEIGHT,
-    GEAR_NEUTRAL, GEAR_REVERSE, GEAR_FIRST, GEAR_SECOND, GEAR_THIRD,
-    GEAR_FOURTH, GEAR_FIFTH, GEAR_SIXTH,
-    GEAR_COLORS, RPM_MAX, RPM_REDLINE,
-    H_PATTERN_POSITIONS, NEXT_GEAR_HINTS,
-    BLACK, WHITE, DARK_BG, NEON_RED, NEON_GREEN, NEON_BLUE,
-    NEON_ORANGE, NEON_YELLOW, NEON_CYAN, NEON_PINK,
-    DASHBOARD_BG, DASHBOARD_BORDER, GAUGE_BG, GAUGE_RING, GAUGE_TEXT,
-    PEDAL_IDLE, PEDAL_GAS_ACTIVE, PEDAL_CLUTCH_ACTIVE,
-    GRAY_LIGHT, GRAY_MED, GRAY_DARK
+    SCREEN_WIDTH, DASHBOARD_Y, DASHBOARD_HEIGHT, GEAR_NEUTRAL,
+    GEAR_REVERSE, GEAR_FIRST, GEAR_SECOND, GEAR_THIRD, GEAR_FOURTH,
+    GEAR_FIFTH, GEAR_SIXTH, GEAR_COLORS, RPM_MAX, RPM_REDLINE,
+    H_PATTERN_POSITIONS, WHITE, NEON_RED, NEON_GREEN, NEON_ORANGE,
+    NEON_YELLOW, NEON_CYAN, DASHBOARD_BG, DASHBOARD_BORDER, GAUGE_BG,
+    GAUGE_RING, PEDAL_IDLE, PEDAL_GAS_ACTIVE, PEDAL_CLUTCH_ACTIVE,
+    GRAY_MED, GRAY_DARK
 )
 
 class Dashboard:
     """
     Desenha o painel na parte inferior da tela contendo as informações de telemetria
-    e a visualização de embreagem/acelerador/câmbio.
+    e a visualização de embreagem/acelerador/câmbio
     """
 
     def __init__(self):
-        """Inicializa as fontes e timers de animação do painel."""
+        """Inicializa as fontes e timers de animação do painel"""
         self.font_large = pygame.font.Font(None, 56)
         self.font_medium = pygame.font.Font(None, 36)
         self.font_small = pygame.font.Font(None, 26)
@@ -37,14 +34,14 @@ class Dashboard:
 
     def update(self, dt):
         """
-        Atualiza animações do painel.
+        Atualiza animações do painel
         :param dt: Tempo delta em segundos
         """
         self._anim_timer += dt
 
     def draw(self, surface, car, shifter):
         """
-        Desenha todos os sub-elementos do painel na tela de corrida.
+        Desenha todos os sub-elementos do painel na tela de corrida
         :param surface: Tela do Pygame
         :param car: Objeto Car do jogador
         :param shifter: Objeto Shifter do jogador
@@ -74,20 +71,20 @@ class Dashboard:
         self._draw_shift_hints(surface, 1070, panel_y + 30, shifter)
 
     def _draw_panel_background(self, surface, y, h):
-        """Desenha a faixa escura do painel e sua divisória com neon cyan."""
+        """Desenha a faixa escura do painel e sua divisória com neon cyan"""
         pygame.draw.rect(surface, DASHBOARD_BG, (0, y, SCREEN_WIDTH, h))
         pygame.draw.rect(surface, DASHBOARD_BORDER, (0, y, SCREEN_WIDTH, 3))
         pygame.draw.rect(surface, NEON_CYAN, (0, y, SCREEN_WIDTH, 1))
 
     def _draw_speedometer(self, surface, cx, cy, radius, car):
-        """Desenha o velocímetro de agulha."""
+        """Desenha o velocímetro de agulha"""
         # Fundo escuro e círculo limitador
         pygame.draw.circle(surface, GAUGE_BG, (cx, cy), radius)
         pygame.draw.circle(surface, GAUGE_RING, (cx, cy), radius, 3)
 
         # Desenha os pauzinhos de marcação de velocidade
         for i in range(0, 11):
-            angle = math.radians(-225 + i * 27)  # Arco de 270 graus
+            angle = math.radians(-225 + i * 27)
             inner = radius - 12
             outer = radius - 4
             x1 = cx + math.cos(angle) * inner
@@ -116,7 +113,7 @@ class Dashboard:
         surface.blit(label, (cx - label.get_width() // 2, cy - radius - 18))
 
     def _draw_tachometer(self, surface, cx, cy, radius, car):
-        """Desenha o conta-giros (tacômetro) com redline."""
+        """Desenha o conta-giros (tacômetro) com redline"""
         pygame.draw.circle(surface, GAUGE_BG, (cx, cy), radius)
         pygame.draw.circle(surface, GAUGE_RING, (cx, cy), radius, 3)
 
@@ -230,7 +227,7 @@ class Dashboard:
     def _draw_h_pattern_display(self, surface, x, y, shifter):
         """
         Desenha a moldura do H-Pattern contendo o desenho das canaletas,
-        a posição atual do knob e a linha de trajetória iluminada até a próxima marcha.
+        a posição atual do knob e a linha de trajetória iluminada até a próxima marcha
         """
         w, h = 210, 180
         pygame.draw.rect(surface, GAUGE_BG, (x, y, w, h))
@@ -356,7 +353,7 @@ class Dashboard:
             surface.blit(rev_label, (x + w // 2 - rev_label.get_width() // 2, y + h - 20))
 
     def _draw_pedals(self, surface, x, y, car):
-        """Desenha os dois pedais que afundam na tela (Acelerador e Embreagem)."""
+        """Desenha os dois pedais que afundam na tela (Acelerador e Embreagem)"""
         pedal_w = 55
         pedal_h = 100
         gap = 20
@@ -410,7 +407,7 @@ class Dashboard:
         surface.blit(desc2, (clutch_x + pedal_w // 2 - desc2.get_width() // 2, y + pedal_h + 50))
 
     def _draw_shift_hints(self, surface, x, y, shifter):
-        """Desenha a caixa de dicas com as setas pendentes ou o aviso de arranhada de câmbio."""
+        """Desenha a caixa de dicas com as setas pendentes ou o aviso de arranhada de câmbio"""
         # Se o jogador iniciou o Neutro (barra central), mostra a coordenada do knob
         pending = shifter.get_pending_sequence()
         if pending:

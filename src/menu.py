@@ -1,26 +1,24 @@
 """
-Módulo de menus do jogo.
-Implementa o menu principal, seleção de carro e seleção de fase de forma didática.
+Módulo de menus
+Implementa o menu principal, seleção de carro e seleção de fase de forma didática
 """
 
 import math
 import pygame
 from src.constants import (
-    SCREEN_WIDTH, SCREEN_HEIGHT,
-    CAR_BALANCED, CAR_HIGH_ACCEL, CAR_TOP_SPEED, CAR_CONFIGS, STAGE_CONFIGS,
-    BLACK, WHITE, DARK_BG, NEON_CYAN, NEON_GREEN, NEON_ORANGE,
-    NEON_RED, NEON_YELLOW, NEON_PINK, NEON_PURPLE,
-    GEAR_COLORS, GEAR_NEUTRAL, GEAR_REVERSE, GEAR_FIRST, GEAR_SECOND, GEAR_THIRD, GEAR_FOURTH, GEAR_FIFTH, GEAR_SIXTH,
+    SCREEN_WIDTH, SCREEN_HEIGHT, CAR_BALANCED, CAR_HIGH_ACCEL, CAR_TOP_SPEED,
+    CAR_CONFIGS, STAGE_CONFIGS, WHITE, DARK_BG, NEON_CYAN, NEON_GREEN, NEON_ORANGE,
+    NEON_RED, NEON_YELLOW, GEAR_COLORS, GEAR_FIRST, GEAR_SECOND, GEAR_THIRD, GEAR_FOURTH, GEAR_FIFTH, GEAR_SIXTH,
     GRAY_LIGHT, GRAY_MED, GRAY_DARK
 )
 
 class MainMenu:
     """
-    Menu principal com o título do jogo, opções de navegação e painel explicativo de controles.
+    Menu principal com o título, opções de navegação e painel explicativo de controles
     """
 
     def __init__(self):
-        """Inicializa fontes de texto e cronômetro de animação."""
+        """Inicializa fontes de texto e cronômetro de animação"""
         self.font_title = pygame.font.Font(None, 90)
         self.font_subtitle = pygame.font.Font(None, 44)
         self.font_option = pygame.font.Font(None, 40)
@@ -30,14 +28,14 @@ class MainMenu:
 
     def update(self, dt):
         """
-        Atualiza animações do menu.
+        Atualiza animações do menu
         :param dt: Tempo delta em segundos
         """
         self._anim_timer += dt
 
     def draw(self, surface):
         """
-        Desenha o menu principal completo.
+        Desenha o menu principal completo
         :param surface: Tela do Pygame
         """
         surface.fill(DARK_BG)
@@ -55,14 +53,14 @@ class MainMenu:
         self._draw_controls_panel(surface)
 
     def _draw_bg_lines(self, surface):
-        """Desenha linhas de fundo onduladas."""
+        """Desenha linhas de fundo onduladas"""
         for i in range(0, SCREEN_WIDTH, 60):
             offset = math.sin(self._anim_timer * 0.5 + i * 0.02) * 20
             color = (20, 20, 35)
             pygame.draw.line(surface, color, (i, 0), (i + int(offset), SCREEN_HEIGHT), 1)
 
     def _draw_title(self, surface):
-        """Desenha o título e o subtítulo com efeito pulsante."""
+        """Desenha o título e o subtítulo com efeito pulsante"""
         pulse = 0.85 + 0.15 * math.sin(self._anim_timer * 2)
         title_color = tuple(int(c * pulse) for c in NEON_ORANGE)
 
@@ -83,7 +81,7 @@ class MainMenu:
         pygame.draw.rect(surface, NEON_ORANGE, (lx, 185, line_w, 2))
 
     def _draw_options(self, surface):
-        """Desenha as caixas com opções de menu."""
+        """Desenha as caixas com opções de menu"""
         options = [
             ("[1]  Selecionar corrida", NEON_GREEN),
             ("[2]  Selecionar carro", NEON_CYAN),
@@ -100,7 +98,7 @@ class MainMenu:
             surface.blit(opt, (SCREEN_WIDTH // 2 - opt.get_width() // 2, y + 5))
 
     def _draw_controls_panel(self, surface):
-        """Desenha o painel de explicações dos controles na parte inferior."""
+        """Desenha o painel de explicações dos controles na parte inferior"""
         panel_x = 60
         panel_y = 430
         panel_w = SCREEN_WIDTH - 120
@@ -179,12 +177,12 @@ class MainMenu:
 
 class CarSelectMenu:
     """
-    Menu para a seleção do modelo de carro com exibição dos atributos técnicos.
+    Menu para a seleção do modelo de carro com exibição dos atributos técnicos
     """
 
     def __init__(self, sprite_generator):
         """
-        Inicializa o menu de seleção.
+        Inicializa o menu de seleção
         :param sprite_generator: Objeto SpriteGenerator para puxar a imagem estática dos carros
         """
         self.sprite_gen = sprite_generator
@@ -196,12 +194,12 @@ class CarSelectMenu:
         self._anim_timer = 0.0
 
     def update(self, dt):
-        """Atualiza animações do menu."""
+        """Atualiza animações do menu"""
         self._anim_timer += dt
 
     def draw(self, surface, selected_index):
         """
-        Renderiza a tela de seleção de carros.
+        Renderiza a tela de seleção de carros
         :param surface: Tela do Pygame
         :param selected_index: Índice do carro selecionado
         """
@@ -226,7 +224,7 @@ class CarSelectMenu:
         surface.blit(hint, (SCREEN_WIDTH // 2 - hint.get_width() // 2, SCREEN_HEIGHT - 40))
 
     def _draw_car_card(self, surface, config, car_type, index, y, selected):
-        """Desenha um card retangular com dados e o sprite do carro."""
+        """Desenha um card retangular com dados e o sprite do carro"""
         card_x = 100
         card_w = SCREEN_WIDTH - 200
         card_h = 155
@@ -287,12 +285,12 @@ class CarSelectMenu:
 
 class StageSelectMenu:
     """
-    Menu para a seleção do estágio da corrida.
-    Carrega previews dinâmicos das imagens do background.
+    Menu para a seleção do estágio da corrida
+    Carrega previews dinâmicos das imagens do background
     """
 
     def __init__(self):
-        """Inicializa fontes e carrega imagens de visualização prévia da fase."""
+        """Inicializa fontes e carrega imagens de visualização prévia da fase"""
         self.font_title = pygame.font.Font(None, 64)
         self.font_stage = pygame.font.Font(None, 36)
         self.font_small = pygame.font.Font(None, 26)
@@ -303,7 +301,7 @@ class StageSelectMenu:
         self._previews = self._load_previews()
 
     def _load_previews(self):
-        """Tenta carregar o céu (1.png) de cada pasta de cidade para desenhar de thumbnail."""
+        """Tenta carregar o céu (1.png) de cada pasta de cidade para desenhar de thumbnail"""
         import os
         from src.race import STAGE_CITY_MAP, IMAGES_BASE_DIR
 
@@ -314,22 +312,17 @@ class StageSelectMenu:
         for stage_idx, city_folder in STAGE_CITY_MAP.items():
             city_path = os.path.join(IMAGES_BASE_DIR, city_folder)
             img_path = os.path.join(city_path, "1.png")
-
-            if os.path.isfile(img_path):
-                try:
-                    img = pygame.image.load(img_path).convert_alpha()
-                    previews[stage_idx] = pygame.transform.scale(img, (preview_w, preview_h))
-                except pygame.error:
-                    pass
+            img = pygame.image.load(img_path).convert_alpha()
+            previews[stage_idx] = pygame.transform.scale(img, (preview_w, preview_h))
         return previews
 
     def update(self, dt):
-        """Atualiza animações do menu."""
+        """Atualiza animações do menu"""
         self._anim_timer += dt
 
     def draw(self, surface):
         """
-        Desenha o menu de fases em formato de grid.
+        Desenha o menu de fases em formato de grid
         :param surface: Tela do Pygame
         """
         surface.fill(DARK_BG)
@@ -352,7 +345,7 @@ class StageSelectMenu:
         surface.blit(hint, (SCREEN_WIDTH // 2 - hint.get_width() // 2, SCREEN_HEIGHT - 35))
 
     def _draw_stage_card(self, surface, stage, index, x, y):
-        """Desenha cada quadrado de estágio contendo o preview do cenário e dificuldade da IA."""
+        """Desenha cada quadrado de estágio contendo o preview do cenário e dificuldade da IA"""
         w, h = 500, 165
         pygame.draw.rect(surface, (20, 20, 30), (x, y, w, h))
 

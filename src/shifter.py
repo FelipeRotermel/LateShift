@@ -1,25 +1,23 @@
 """
-Módulo do câmbio H-Pattern.
-Implementa o Shifter que gerencia a posição física da alavanca (knob) e a marcha engatada.
+Módulo do câmbio H-Pattern
+Implementa o Shifter que gerencia a posição física da alavanca (knob) e a marcha engatada
 """
 
 import pygame
 from src.constants import (
-    GEAR_NEUTRAL, GEAR_REVERSE, GEAR_FIRST, GEAR_SECOND, GEAR_THIRD,
-    GEAR_FOURTH, GEAR_FIFTH, GEAR_SIXTH,
-    KNOB_ADJACENCY, KNOB_GEAR_MAP, NEXT_GEAR_HINTS, H_PATTERN_POSITIONS
+    GEAR_NEUTRAL, KNOB_ADJACENCY, KNOB_GEAR_MAP, NEXT_GEAR_HINTS, H_PATTERN_POSITIONS
 )
 
 class Shifter:
     """
-    Controla o câmbio manual H-Pattern.
-    A alavanca (knob) se move pela grade física usando as setas do teclado.
-    Para mover a alavanca, o jogador precisa segurar a embreagem (SPACE).
+    Controla o câmbio manual H-Pattern
+    A alavanca (knob) se move pela grade física usando as setas do teclado
+    Para mover a alavanca, o jogador precisa segurar a embreagem (SPACE)
     """
 
     def __init__(self, sound_manager=None):
         """
-        Inicializa o shifter na posição Neutro central (1, 0).
+        Inicializa o shifter na posição Neutro central (1, 0)
         :param sound_manager: Gerenciador de som do jogo
         """
         self.sound_manager = sound_manager
@@ -47,7 +45,7 @@ class Shifter:
         }
 
     def reset(self):
-        """Reseta o câmbio para a posição inicial Neutro."""
+        """Reseta o câmbio para a posição inicial Neutro"""
         self.current_gear = GEAR_NEUTRAL
         self.knob_position = (1, 0)
         self._last_engaged_gear = GEAR_NEUTRAL
@@ -57,8 +55,8 @@ class Shifter:
 
     def handle_event(self, event, clutch_pressed):
         """
-        Trata o pressionamento de teclas direcionais para mover a alavanca.
-        Retorna se a marcha mudou ou se houve um erro.
+        Trata o pressionamento de teclas direcionais para mover a alavanca
+        Retorna se a marcha mudou ou se houve um erro
         :param event: Evento do Pygame
         :param clutch_pressed: Indica se o pedal de embreagem está pressionado
         :return: Tupla (gear_changed: bool, error: bool)
@@ -106,7 +104,7 @@ class Shifter:
         return False, False
 
     def update(self, dt):
-        """Atualiza timers do shifter."""
+        """Atualiza timers do shifter"""
         # Diminui o tempo de exibição do alerta de erro
         if self._error_timer > 0:
             self._error_timer -= dt
@@ -115,7 +113,7 @@ class Shifter:
 
     def get_next_gear_hint(self):
         """
-        Informa qual é a próxima marcha sugerida e a sequência de setas para ela.
+        Informa qual é a próxima marcha sugerida e a sequência de setas para ela
         :return: Tupla (proxima_marcha: int ou None, texto_dica: str)
         """
         # Se estiver em uma marcha engatada, recomenda a próxima
@@ -131,8 +129,8 @@ class Shifter:
 
     def get_path_to_next_gear(self):
         """
-        Encontra o caminho do knob atual até o slot da próxima marcha.
-        Utiliza busca em largura (BFS) didática.
+        Encontra o caminho do knob atual até o slot da próxima marcha
+        Utiliza busca em largura (BFS) didática
         """
         next_gear, _ = self.get_next_gear_hint()
         if next_gear is None:
@@ -145,7 +143,7 @@ class Shifter:
         return self._bfs_path(self.knob_position, target_pos)
 
     def get_pending_sequence(self):
-        """Retorna uma string simples representando a posição do knob quando em neutro."""
+        """Retorna uma string simples representando a posição do knob quando em neutro"""
         if self.current_gear == GEAR_NEUTRAL:
             x, y = self.knob_position
             return [f"({x},{y})"]
@@ -153,13 +151,13 @@ class Shifter:
 
     @property
     def has_error(self):
-        """Informa se ocorreu um erro de marcha recentemente."""
+        """Informa se ocorreu um erro de marcha recentemente"""
         return self._error_timer > 0
 
     def _trigger_grind_error(self):
         """
-        Ativa a penalidade de erro (arranhada de marcha).
-        Mantém o knob e a marcha atual na mesma posição, mas sinaliza o erro e emite o som.
+        Ativa a penalidade de erro (arranhada de marcha)
+        Mantém o knob e a marcha atual na mesma posição, mas sinaliza o erro e emite o som
         """
         self.last_shift_error = True
         self.last_shift_success = False
@@ -171,8 +169,8 @@ class Shifter:
 
     def _bfs_path(self, start, end):
         """
-        Busca em largura simples para encontrar o caminho na grade.
-        Algoritmo clássico de faculdade (didático e legível).
+        Busca em largura simples para encontrar o caminho na grade
+        Algoritmo clássico de faculdade (didático e legível)
         """
         if start == end:
             return [start]

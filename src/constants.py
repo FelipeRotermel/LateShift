@@ -1,6 +1,5 @@
 """
-Módulo de constantes globais do jogo LateShift.
-Contém todas as configurações e parâmetros compartilhados entre os módulos.
+Módulo de constantes globais
 """
 
 # === Configurações de tela ===
@@ -145,11 +144,11 @@ GEAR_RATIOS = {
 # Fração da velocidade máxima atingível em cada marcha
 GEAR_SPEED_LIMITS = {
     GEAR_NEUTRAL: 0.0,
-    GEAR_FIRST: 0.19,
-    GEAR_SECOND: 0.36,
-    GEAR_THIRD: 0.52,
-    GEAR_FOURTH: 0.69,
-    GEAR_FIFTH: 0.86,
+    GEAR_FIRST: 0.26,
+    GEAR_SECOND: 0.40,
+    GEAR_THIRD: 0.56,
+    GEAR_FOURTH: 0.74,
+    GEAR_FIFTH: 0.95,
     GEAR_SIXTH: 1.0,
     GEAR_REVERSE: 0.15,
 }
@@ -158,7 +157,7 @@ GEAR_SPEED_LIMITS = {
 # Posições do knob no diagrama H (coordenadas relativas em grade)
 # Layout: R(-3,-1) 1(-1,-1) 3(1,-1) 5(3,-1)
 #         Neutro(0,0) na barra central
-#                2(-1,1)  4(1,1)  6(3,1)
+#                  2(-1,1)  4(1,1)  6(3,1)
 H_PATTERN_POSITIONS = {
     GEAR_NEUTRAL: (1, 0),
     GEAR_REVERSE: (-3, -1),
@@ -181,8 +180,8 @@ H_PATTERN_PATHS = {
     (GEAR_NEUTRAL, GEAR_REVERSE): [(-1, 0), (-3, 0), (-3, -1)],
 }
 
-# Mapa de adjacência do knob na grade física do câmbio.
-# Cada posição define quais direções de seta são válidas e para onde levam.
+# Mapa de adjacência do knob na grade física do câmbio
+# Cada posição define quais direções de seta são válidas e para onde levam
 KNOB_ADJACENCY = {
     # Posições das marchas (linha superior — só desce para a barra)
     (-3, -1): {"DOWN": (-3, 0)},

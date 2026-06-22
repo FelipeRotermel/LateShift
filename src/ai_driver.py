@@ -1,21 +1,24 @@
 """
-Módulo do piloto controlado por Inteligência Artificial (oponente).
-Implementa o comportamento da IA para acelerar e trocar marchas automaticamente.
+Módulo do piloto controlado por Inteligência Artificial (oponente)
+Implementa o comportamento da IA para acelerar e trocar marchas automaticamente
 """
 
 import random
-from src.constants import (GEAR_NEUTRAL, GEAR_FIRST, GEAR_SECOND, GEAR_THIRD, GEAR_FOURTH, GEAR_FIFTH, GEAR_SIXTH)
+from src.constants import (
+    GEAR_NEUTRAL, GEAR_FIRST, GEAR_SECOND,
+    GEAR_THIRD, GEAR_FOURTH, GEAR_FIFTH, GEAR_SIXTH
+)
 from src.car import Car
 
 class AIDriver:
     """
-    Controla o carro do oponente de forma automatizada.
-    Troca marchas sequencialmente com base em um RPM ideal e acelera continuamente.
+    Controla o carro do oponente de forma automatizada
+    Troca marchas sequencialmente com base em um RPM ideal e acelera continuamente
     """
 
     def __init__(self, car_config, ai_multiplier=1.0):
         """
-        Inicializa o oponente da IA ajustando sua dificuldade.
+        Inicializa o oponente da IA ajustando sua dificuldade
         :param car_config: Dicionário com atributos do carro base
         :param ai_multiplier: Multiplicador para deixar a IA mais rapida/lenta
         """
@@ -36,7 +39,7 @@ class AIDriver:
         self.race_started = False
 
     def reset(self):
-        """Reseta o estado da IA para a largada."""
+        """Reseta o estado da IA para a largada"""
         self.car.reset()
         self.reaction_timer = 0.0
         self.race_started = False
@@ -44,7 +47,7 @@ class AIDriver:
         self.reaction_delay = random.uniform(0.1, 0.3)
 
     def start_race(self):
-        """Sinaliza que a corrida foi iniciada e prepara a largada da IA."""
+        """Sinaliza que a corrida foi iniciada e prepara a largada da IA"""
         self.race_started = True
         self.reaction_timer = 0.0
         # A IA larga engatada na 1ª marcha com motor cheio (giro alto) para resposta imediata
@@ -53,7 +56,7 @@ class AIDriver:
 
     def update(self, dt):
         """
-        Atualiza as ações da IA a cada frame.
+        Atualiza as ações da IA a cada frame
         :param dt: Tempo delta em segundos
         """
         if not self.race_started:
@@ -76,8 +79,8 @@ class AIDriver:
 
     def _auto_shift(self):
         """
-        Troca as marchas da IA de forma automática baseada no RPM do motor e limite de velocidade da marcha.
-        As reduções e perdas por atrito de embreagem são simuladas de forma simples.
+        Troca as marchas da IA de forma automática baseada no RPM do motor e limite de velocidade da marcha
+        As reduções e perdas por atrito de embreagem são simuladas de forma simples
         """
         current = self.car.current_gear
         rpm = self.car.rpm

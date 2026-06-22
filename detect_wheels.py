@@ -1,4 +1,4 @@
-"""Script para detectar as posições das rodas nos sprites dos carros."""
+"""Script para detectar as posições das rodas nos sprites dos carros"""
 import pygame
 pygame.init()
 screen = pygame.display.set_mode((1, 1))

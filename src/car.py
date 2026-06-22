@@ -1,6 +1,6 @@
 """
-Módulo do carro do jogo.
-Implementa a classe Car que simula a física do motor (RPM, velocidade, aceleração, motor explodido).
+Módulo do carro do jogo
+Implementa a classe Car que simula a física do motor (RPM, velocidade, aceleração, motor explodido)
 """
 
 from src.constants import (
@@ -12,14 +12,14 @@ from src.constants import (
 
 class Car:
     """
-    Classe que representa o carro do jogador ou da IA.
-    Contém a física básica de aceleração com base em marchas e RPM.
+    Classe que representa o carro do jogador ou da IA
+    Contém a física básica de aceleração com base em marchas e RPM
     """
 
     def __init__(self, config):
         """
-        Inicializa o carro com suas configurações específicas.
-        :param config: Dicionário com top_speed, acceleration, torque, etc.
+        Inicializa o carro com suas configurações específicas
+        :param config: Dicionário com top_speed, acceleration, torque, etc
         """
         self.config = config
         self.top_speed = config["top_speed"]
@@ -46,7 +46,7 @@ class Car:
         self.screen_x = 100.0
 
     def reset(self):
-        """Reseta o estado do carro para o início de uma nova corrida."""
+        """Reseta o estado do carro para o início de uma nova corrida"""
         self.speed = 0.0
         self.distance = 0.0
         self.rpm = 0.0
@@ -59,7 +59,7 @@ class Car:
 
     def update(self, dt):
         """
-        Atualiza a física do carro a cada frame.
+        Atualiza a física do carro a cada frame
         :param dt: Tempo delta em segundos desde o último frame
         """
         if self.engine_blown:
@@ -82,7 +82,7 @@ class Car:
         self.distance += self.speed * dt
 
     def _update_rpm(self, dt):
-        """Atualiza o RPM baseado na aceleração, embreagem e marcha."""
+        """Atualiza o RPM baseado na aceleração, embreagem e marcha"""
         if self.gas_pressed:
             if self.clutch_pressed or self.current_gear == GEAR_NEUTRAL:
                 # Com a embreagem pisada ou em ponto morto, o motor sobe giro livremente
@@ -124,7 +124,7 @@ class Car:
         self.rpm = max(0.0, min(self.rpm, RPM_MAX))
 
     def _check_engine_explosion(self, dt):
-        """Verifica se o motor passou do limite de segurança (redline) por muito tempo."""
+        """Verifica se o motor passou do limite de segurança (redline) por muito tempo"""
         if self.rpm >= RPM_REDLINE:
             self.redline_timer += dt
             if self.redline_timer >= RPM_EXPLODE_TIME:
@@ -134,7 +134,7 @@ class Car:
             self.redline_timer = max(0.0, self.redline_timer - dt * 2)
 
     def _update_speed(self, dt):
-        """Calcula e atualiza a velocidade com base na aceleração e arrasto."""
+        """Calcula e atualiza a velocidade com base na aceleração e arrasto"""
         if self.current_gear == GEAR_NEUTRAL or self.clutch_pressed:
             # Sem marcha engatada ou com embreagem pisada: o carro perde velocidade pelo atrito natural
             self.speed *= (1.0 - 0.5 * dt)
@@ -180,16 +180,16 @@ class Car:
         self.speed = max(0.0, self.speed)
 
     def apply_grind_penalty(self):
-        """Aplica uma penalidade física ao errar a marcha (arranhada de câmbio)."""
+        """Aplica uma penalidade física ao errar a marcha (arranhada de câmbio)"""
         self.rpm *= 0.4      # Motor perde 60% do giro instantaneamente
         self.speed *= 0.85   # O carro perde 15% de velocidade pelo tranco
 
     @property
     def is_at_redline(self):
-        """Informa se o motor está na faixa vermelha do conta-giros."""
+        """Informa se o motor está na faixa vermelha do conta-giros"""
         return self.rpm >= RPM_REDLINE
 
     @property
     def redline_progress(self):
-        """Retorna o percentual de 0.0 a 1.0 de perigo de explosão do motor."""
+        """Retorna o percentual de 0.0 a 1.0 de perigo de explosão do motor"""
         return min(1.0, self.redline_timer / RPM_EXPLODE_TIME)

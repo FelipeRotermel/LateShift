@@ -1,6 +1,6 @@
 """
-Módulo da pista de corrida e renderização do cenário.
-Controla o efeito de parallax nas imagens do plano de fundo e o desenho da pista.
+Módulo da pista de corrida e renderização do cenário
+Controla o efeito de parallax nas imagens do plano de fundo e o desenho da pista
 """
 
 import os
@@ -26,12 +26,12 @@ STAGE_CITY_MAP = {
 
 class Race:
     """
-    Gerencia a renderização do cenário e do asfalto com efeito parallax.
-    Desenha os competidores (jogador e IA) de forma sincronizada na tela.
+    Gerencia a renderização do cenário e do asfalto com efeito parallax
+    Desenha os competidores (jogador e IA) de forma sincronizada na tela
     """
 
     def __init__(self):
-        """Inicializa fontes de texto e variáveis de scroll da pista."""
+        """Inicializa fontes de texto e variáveis de scroll da pista"""
         self.stage_index = 0
         self.stage_config = STAGE_CONFIGS[0]
         self.parallax_offset = 0.0
@@ -47,7 +47,7 @@ class Race:
 
     def set_stage(self, stage_index):
         """
-        Configura o estágio atual e carrega as imagens do cenário.
+        Configura o estágio atual e carrega as imagens do cenário
         :param stage_index: Índice da fase (0 a 5)
         """
         self.stage_index = stage_index
@@ -56,12 +56,12 @@ class Race:
         self._load_parallax_layers()
 
     def reset(self):
-        """Reseta a posição do cenário para o início."""
+        """Reseta a posição do cenário para o início"""
         self.parallax_offset = 0.0
 
     def update(self, dt, player_speed, ai_speed):
         """
-        Avança a posição do cenário conforme a velocidade do jogador.
+        Avança a posição do cenário conforme a velocidade do jogador
         :param dt: Tempo delta em segundos
         :param player_speed: Velocidade do jogador (km/h)
         :param ai_speed: Velocidade da IA (km/h)
@@ -71,7 +71,7 @@ class Race:
 
     def draw_track(self, surface, player_car, ai_car, player_sprite, ai_sprite):
         """
-        Renderiza todo o background, asfalto, linha de chegada e os carros.
+        Renderiza todo o background, asfalto, linha de chegada e os carros
         :param surface: Tela do Pygame
         """
         cfg = self.stage_config
@@ -90,7 +90,7 @@ class Race:
 
     def draw_countdown(self, surface, count):
         """
-        Desenha os números de contagem regressiva na tela (3, 2, 1, GO!).
+        Desenha os números de contagem regressiva na tela
         """
         if count > 0:
             text = self.font_large.render(str(count), True, NEON_RED)
@@ -108,7 +108,7 @@ class Race:
 
     def draw_result(self, surface, won, engine_blown=False):
         """
-        Desenha a tela de resultado da corrida por cima da pista.
+        Desenha a tela de resultado da corrida por cima da pista
         """
         overlay = pygame.Surface((SCREEN_WIDTH, TRACK_HEIGHT), pygame.SRCALPHA)
         if won:
@@ -134,15 +134,12 @@ class Race:
         surface.blit(hint, (SCREEN_WIDTH // 2 - hint.get_width() // 2, TRACK_HEIGHT // 2 + 70))
 
     def _load_parallax_layers(self):
-        """Carrega e escala as camadas PNG da pasta correspondente à fase."""
+        """Carrega e escala as camadas PNG da pasta correspondente à fase"""
         self._layers = []
         self._layer_widths = []
 
         city_folder = STAGE_CITY_MAP.get(self.stage_index, "city 1")
         city_path = os.path.join(IMAGES_BASE_DIR, city_folder)
-
-        if not os.path.isdir(city_path):
-            return
 
         # Lista e ordena os arquivos numéricos de 1 a N.png
         png_files = []
@@ -160,22 +157,19 @@ class Race:
 
         for num, filename in png_files:
             filepath = os.path.join(city_path, filename)
-            try:
-                img = pygame.image.load(filepath).convert_alpha()
-                orig_w, orig_h = img.get_size()
+            img = pygame.image.load(filepath).convert_alpha()
+            orig_w, orig_h = img.get_size()
 
-                # Escala a imagem mantendo a proporção original para preencher a pista
-                scale_factor = target_h / orig_h
-                new_w = int(orig_w * scale_factor)
-                scaled = pygame.transform.scale(img, (new_w, target_h))
+            # Escala a imagem mantendo a proporção original para preencher a pista
+            scale_factor = target_h / orig_h
+            new_w = int(orig_w * scale_factor)
+            scaled = pygame.transform.scale(img, (new_w, target_h))
 
-                self._layers.append(scaled)
-                self._layer_widths.append(new_w)
-            except pygame.error:
-                pass
+            self._layers.append(scaled)
+            self._layer_widths.append(new_w)
 
     def _draw_parallax_layers(self, surface):
-        """Renderiza cada camada do cenário com uma velocidade diferente para criar profundidade."""
+        """Renderiza cada camada do cenário com uma velocidade diferente para criar profundidade"""
         if not self._layers:
             surface.fill((20, 20, 40), (0, 0, SCREEN_WIDTH, TRACK_HEIGHT))
             return
@@ -197,7 +191,7 @@ class Race:
                 x += layer_w
 
     def _draw_road(self, surface, cfg):
-        """Desenha a estrada e as listras divisórias amarelas ondulantes."""
+        """Desenha a estrada e as listras divisórias amarelas ondulantes"""
         road_y = TRACK_HEIGHT - 100
         road_h = 100
 
@@ -219,7 +213,7 @@ class Race:
         pygame.draw.rect(surface, cfg["road_line"], (0, road_y + road_h - 2, SCREEN_WIDTH, 2))
 
     def _draw_finish_line(self, surface, player_car, ai_car):
-        """Desenha o grid xadrez da linha de chegada quando os carros estão próximos."""
+        """Desenha o grid xadrez da linha de chegada quando os carros estão próximos"""
         # Distância que falta para o jogador cruzar a linha
         stage_distance = self.stage_config["distance"]
         remaining = stage_distance - player_car.distance
@@ -242,7 +236,7 @@ class Race:
                     )
 
     def _draw_cars(self, surface, player_car, ai_car, player_sprite, ai_sprite):
-        """Desenha os sprites dos carros baseados na distância relativa entre eles."""
+        """Desenha os sprites dos carros baseados na distância relativa entre eles"""
         road_y = TRACK_HEIGHT - 100
 
         # Jogador fica travado na posição horizontal fixa (x=200)

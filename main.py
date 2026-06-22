@@ -1,6 +1,6 @@
 """
-Ponto de entrada do jogo LateShift.
-Instancia e executa a classe Game principal.
+Ponto de entrada do jogo LateShift
+Instancia e executa a classe Game principal
 """
 
 import pygame
