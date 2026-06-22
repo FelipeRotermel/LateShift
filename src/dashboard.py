@@ -49,25 +49,18 @@ class Dashboard:
         panel_y = DASHBOARD_Y
         panel_h = DASHBOARD_HEIGHT
 
-        # 1. Desenha o fundo e a borda superior do painel
         self._draw_panel_background(surface, panel_y, panel_h)
 
-        # 2. Desenha o Velocímetro (mostrador analógico da esquerda)
         self._draw_speedometer(surface, 140, panel_y + 110, 80, car)
 
-        # 3. Desenha o Conta-giros (mostrador analógico central)
         self._draw_tachometer(surface, 340, panel_y + 110, 80, car)
 
-        # 4. Desenha a marcha atual engatada em destaque
         self._draw_gear_indicator(surface, 510, panel_y + 30, car, shifter)
 
-        # 5. Desenha o diagrama H-Pattern gráfico com a posição da alavanca
         self._draw_h_pattern_display(surface, 700, panel_y + 30, shifter)
 
-        # 6. Desenha os pedais físicos de Acelerador e Embreagem
         self._draw_pedals(surface, 920, panel_y + 40, car)
 
-        # 7. Exibe dicas textuais sobre a próxima marcha
         self._draw_shift_hints(surface, 1070, panel_y + 30, shifter)
 
     def _draw_panel_background(self, surface, y, h):
@@ -174,9 +167,12 @@ class Dashboard:
             bar_h = 6
             bar_x = cx - radius
             bar_y = cy + 68
+
             pygame.draw.rect(surface, GRAY_DARK, (bar_x, bar_y, bar_w, bar_h))
+
             fill_w = int(bar_w * car.redline_progress)
             danger_color = NEON_RED if int(self._anim_timer * 6) % 2 == 0 else NEON_ORANGE
+
             pygame.draw.rect(surface, danger_color, (bar_x, bar_y, fill_w, bar_h))
             pygame.draw.rect(surface, WHITE, (bar_x, bar_y, bar_w, bar_h), 1)
             warn = self.font_tiny.render("ENGINE DANGER!", True, danger_color)
@@ -261,7 +257,7 @@ class Dashboard:
         next_gear, hint_text = shifter.get_next_gear_hint()
 
         if next_gear is not None:
-            # Pega o caminho calculado pelo Shifter
+            # Pega o caminho calculado
             path_positions = shifter.get_path_to_next_gear()
             if path_positions:
                 pixel_points = []
@@ -276,7 +272,7 @@ class Dashboard:
                     p2 = pixel_points[i + 1]
                     pygame.draw.line(surface, path_color, p1, p2, 3)
 
-                    # Desenha pequenas setas direcionais no meio do caminho para ajudar o jogador
+                    # Desenha pequenas setas direcionais no meio do caminho
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     length = math.sqrt(dx * dx + dy * dy)
@@ -295,12 +291,12 @@ class Dashboard:
         # === Desenha os números das marchas na tela ===
         gear_labels = {
             GEAR_REVERSE: "R",
-            GEAR_FIRST: "1",
-            GEAR_SECOND: "2",
-            GEAR_THIRD: "3",
-            GEAR_FOURTH: "4",
-            GEAR_FIFTH: "5",
-            GEAR_SIXTH: "6",
+            GEAR_FIRST:   "1",
+            GEAR_SECOND:  "2",
+            GEAR_THIRD:   "3",
+            GEAR_FOURTH:  "4",
+            GEAR_FIFTH:   "5",
+            GEAR_SIXTH:   "6"
         }
 
         for gear, label_text in gear_labels.items():
@@ -344,13 +340,22 @@ class Dashboard:
         # Legenda das teclas na base da caixa H
         if hint_text and next_gear is not None:
             hint_label = self.font_tiny.render(f"Next: {hint_text}", True, NEON_GREEN)
-            surface.blit(hint_label, (x + w // 2 - hint_label.get_width() // 2, y + h - 20))
+            surface.blit(
+                hint_label,
+                (x + w // 2 - hint_label.get_width() // 2, y + h - 20)
+            )
         elif next_gear is None and current_gear == GEAR_SIXTH:
             max_label = self.font_tiny.render("MAX GEAR", True, NEON_YELLOW)
-            surface.blit(max_label, (x + w // 2 - max_label.get_width() // 2, y + h - 20))
+            surface.blit(
+                max_label,
+                (x + w // 2 - max_label.get_width() // 2, y + h - 20)
+            )
         elif next_gear is None and current_gear == GEAR_REVERSE:
             rev_label = self.font_tiny.render("REVERSE", True, GEAR_COLORS[GEAR_REVERSE])
-            surface.blit(rev_label, (x + w // 2 - rev_label.get_width() // 2, y + h - 20))
+            surface.blit(
+                rev_label,
+                (x + w // 2 - rev_label.get_width() // 2, y + h - 20)
+            )
 
     def _draw_pedals(self, surface, x, y, car):
         """Desenha os dois pedais que afundam na tela (Acelerador e Embreagem)"""
@@ -363,24 +368,46 @@ class Dashboard:
         gas_pressed = car.gas_pressed
 
         # Desenha a moldura de ferro do pedal
-        pygame.draw.rect(surface, GRAY_DARK, (gas_x, y, pedal_w, pedal_h + 20))
-        pygame.draw.rect(surface, GAUGE_RING, (gas_x, y, pedal_w, pedal_h + 20), 2)
+        pygame.draw.rect(
+            surface,
+            GRAY_DARK,
+            (gas_x, y, pedal_w, pedal_h + 20)
+        )
+        pygame.draw.rect(
+            surface,
+            GAUGE_RING,
+            (gas_x, y, pedal_w, pedal_h + 20),
+            2
+        )
 
         # Desenha o pedal afundado proporcionalmente
         depress = 30 if gas_pressed else 0
         pedal_color = PEDAL_GAS_ACTIVE if gas_pressed else PEDAL_IDLE
-        pygame.draw.rect(surface, pedal_color, (gas_x + 5, y + 5 + depress, pedal_w - 10, pedal_h - depress))
+        pygame.draw.rect(
+            surface,
+            pedal_color,
+            (gas_x + 5, y + 5 + depress, pedal_w - 10, pedal_h - depress)
+        )
 
         if gas_pressed:
-            glow = pygame.Surface((pedal_w - 10, pedal_h - depress), pygame.SRCALPHA)
+            glow = pygame.Surface(
+                (pedal_w - 10, pedal_h - depress),
+                pygame.SRCALPHA
+            )
             glow.fill((*PEDAL_GAS_ACTIVE, 40))
             surface.blit(glow, (gas_x + 5, y + 5 + depress))
 
         # Texto indicador
         key_label = self.font_medium.render("W", True, WHITE)
-        surface.blit(key_label, (gas_x + pedal_w // 2 - key_label.get_width() // 2, y + pedal_h + 25))
+        surface.blit(
+            key_label,
+            (gas_x + pedal_w // 2 - key_label.get_width() // 2, y + pedal_h + 25)
+        )
         desc = self.font_tiny.render("GAS", True, GRAY_MED)
-        surface.blit(desc, (gas_x + pedal_w // 2 - desc.get_width() // 2, y + pedal_h + 50))
+        surface.blit(
+            desc,
+            (gas_x + pedal_w // 2 - desc.get_width() // 2, y + pedal_h + 50)
+        )
 
         # === 2. Embreagem (CLUTCH - Tecla ESPAÇO) ===
         clutch_x = x + pedal_w + gap
@@ -393,18 +420,33 @@ class Dashboard:
         # Pedal afundado
         depress_c = 30 if clutch_pressed else 0
         pedal_color_c = PEDAL_CLUTCH_ACTIVE if clutch_pressed else PEDAL_IDLE
-        pygame.draw.rect(surface, pedal_color_c, (clutch_x + 5, y + 5 + depress_c, pedal_w - 10, pedal_h - depress_c))
+        pygame.draw.rect(
+            surface, pedal_color_c,
+            (clutch_x + 5, y + 5 + depress_c, pedal_w - 10, pedal_h - depress_c)
+        )
 
         if clutch_pressed:
-            glow = pygame.Surface((pedal_w - 10, pedal_h - depress_c), pygame.SRCALPHA)
+            glow = pygame.Surface(
+                (pedal_w - 10, pedal_h - depress_c),
+                pygame.SRCALPHA
+            )
             glow.fill((*PEDAL_CLUTCH_ACTIVE, 40))
-            surface.blit(glow, (clutch_x + 5, y + 5 + depress_c))
+            surface.blit(
+                glow,
+                (clutch_x + 5, y + 5 + depress_c)
+            )
 
         # Texto indicador
         key_label2 = self.font_small.render("SPC", True, WHITE)
-        surface.blit(key_label2, (clutch_x + pedal_w // 2 - key_label2.get_width() // 2, y + pedal_h + 27))
+        surface.blit(
+            key_label2,
+            (clutch_x + pedal_w // 2 - key_label2.get_width() // 2, y + pedal_h + 27)
+        )
         desc2 = self.font_tiny.render("CLUTCH", True, GRAY_MED)
-        surface.blit(desc2, (clutch_x + pedal_w // 2 - desc2.get_width() // 2, y + pedal_h + 50))
+        surface.blit(
+            desc2,
+            (clutch_x + pedal_w // 2 - desc2.get_width() // 2, y + pedal_h + 50)
+        )
 
     def _draw_shift_hints(self, surface, x, y, shifter):
         """Desenha a caixa de dicas com as setas pendentes ou o aviso de arranhada de câmbio"""
@@ -412,8 +454,10 @@ class Dashboard:
         pending = shifter.get_pending_sequence()
         if pending:
             seq_str = " -> ".join(pending)
+
             seq_label = self.font_tiny.render("Input:", True, GRAY_MED)
             surface.blit(seq_label, (x, y))
+
             seq_text = self.font_small.render(seq_str, True, NEON_YELLOW)
             surface.blit(seq_text, (x, y + 18))
 

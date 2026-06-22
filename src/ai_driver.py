@@ -97,17 +97,17 @@ class AIDriver:
             self.car.current_gear = GEAR_FIRST
         elif current == GEAR_FIRST and should_shift:
             self.car.current_gear = GEAR_SECOND
-            self.car.rpm *= 0.667  # Simula queda de giro de 1 para 2 (6000 -> 4000)
+            self.car.rpm *= 0.667  # Simula queda de giro de 1 para 2
         elif current == GEAR_SECOND and should_shift:
             self.car.current_gear = GEAR_THIRD
-            self.car.rpm *= 0.717  # Simula queda de giro para 3 (6000 -> 4300)
+            self.car.rpm *= 0.717  # Simula queda de giro para 3
         elif current == GEAR_THIRD and should_shift:
             self.car.current_gear = GEAR_FOURTH
-            self.car.rpm *= 0.750  # Simula queda de giro para 4 (6000 -> 4500)
+            self.car.rpm *= 0.750  # Simula queda de giro para 4
         elif current == GEAR_FOURTH and should_shift:
             self.car.current_gear = GEAR_FIFTH
-            self.car.rpm *= 0.783  # Simula queda de giro para 5 (6000 -> 4700)
+            self.car.rpm *= 0.783  # Simula queda de giro para 5
         elif current == GEAR_FIFTH and should_shift:
             self.car.current_gear = GEAR_SIXTH
-            self.car.rpm *= 0.817  # Simula queda de giro para 6 (6000 -> 4900)
+            self.car.rpm *= 0.817  # Simula queda de giro para 6
 

@@ -244,7 +244,7 @@ STAGE_CONFIGS = [
     {
         "name": "Industrial Dawn",
         "desc": "Ruas da zona industrial",
-        "ai_multiplier": 0.7,
+        "ai_multiplier": 0.65,
         "ai_car_type": CAR_HIGH_ACCEL,
         "distance": 2200.0,
         "sky_top": (100, 160, 220),
@@ -256,7 +256,7 @@ STAGE_CONFIGS = [
     {
         "name": "Outrun Boulevard",
         "desc": "Cartão-postal mais bonito da cidade",
-        "ai_multiplier": 0.7,
+        "ai_multiplier": 0.65,
         "ai_car_type": CAR_BALANCED,
         "distance": 2400.0,
         "sky_top": (60, 120, 180),
@@ -268,7 +268,7 @@ STAGE_CONFIGS = [
     {
         "name": "Shaded Metropolis",
         "desc": "Sombras dos imensos arranha-céus corporativos.",
-        "ai_multiplier": 0.75,
+        "ai_multiplier": 0.7,
         "ai_car_type": CAR_BALANCED,
         "distance": 2600.0,
         "sky_top": (10, 10, 30),
@@ -280,7 +280,7 @@ STAGE_CONFIGS = [
     {
         "name": "Cyber Sunset",
         "desc": "O céu mais vibrante da cidade alta",
-        "ai_multiplier": 0.8,
+        "ai_multiplier": 0.7,
         "ai_car_type": CAR_TOP_SPEED,
         "distance": 2800.0,
         "sky_top": (80, 180, 240),
@@ -292,7 +292,7 @@ STAGE_CONFIGS = [
     {
         "name": "Midnight Club",
         "desc": "Corrida de rua ilegal na rota Bayshore",
-        "ai_multiplier": 0.85,
+        "ai_multiplier": 0.75,
         "ai_car_type": CAR_TOP_SPEED,
         "distance": 3000.0,
         "sky_top": (15, 5, 30),

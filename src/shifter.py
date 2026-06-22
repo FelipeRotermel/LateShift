@@ -96,9 +96,11 @@ class Shifter:
 
             if new_gear != old_gear:
                 self.last_shift_success = True
+
                 # Toca o som de clique de engate
                 if self.sound_manager:
                     self.sound_manager.play("gear_shift")
+
                 return True, False
 
         return False, False
@@ -147,6 +149,7 @@ class Shifter:
         if self.current_gear == GEAR_NEUTRAL:
             x, y = self.knob_position
             return [f"({x},{y})"]
+
         return []
 
     @property
@@ -161,11 +164,10 @@ class Shifter:
         """
         self.last_shift_error = True
         self.last_shift_success = False
-        self._error_timer = 0.5  # Exibe erro por meio segundo
+        self._error_timer = 0.5
 
         if self.sound_manager:
             self.sound_manager.play("gear_grind")
-
 
     def _bfs_path(self, start, end):
         """
@@ -175,7 +177,7 @@ class Shifter:
         if start == end:
             return [start]
 
-        # Lista de tuplas (posição_atual, caminho_acumulado) agindo como fila (FIFO)
+        # Lista de tuplas agindo como fila
         queue = [(start, [start])]
         visited = {start}
 

@@ -76,16 +76,12 @@ class Race:
         """
         cfg = self.stage_config
 
-        # 1. Desenha as camadas do cenário
         self._draw_parallax_layers(surface)
 
-        # 2. Desenha o asfalto e as faixas
         self._draw_road(surface, cfg)
 
-        # 3. Desenha a linha de chegada se estiver perto
         self._draw_finish_line(surface, player_car, ai_car)
 
-        # 4. Desenha os carros do jogador e da IA
         self._draw_cars(surface, player_car, ai_car, player_sprite, ai_sprite)
 
     def draw_countdown(self, surface, count):
@@ -224,6 +220,7 @@ class Race:
         if 0 <= finish_screen_x <= SCREEN_WIDTH + 50:
             road_y = TRACK_HEIGHT - 100
             sq_size = 8
+
             # Desenha padrão xadrez (quadriculado) de corrida
             for row in range(12):
                 for col in range(3):
@@ -231,8 +228,8 @@ class Race:
                     pygame.draw.rect(
                         surface, color,
                         (finish_screen_x + col * sq_size,
-                         road_y + 16 + row * sq_size,
-                         sq_size, sq_size)
+                        road_y + 16 + row * sq_size,
+                        sq_size, sq_size)
                     )
 
     def _draw_cars(self, surface, player_car, ai_car, player_sprite, ai_sprite):
@@ -278,5 +275,6 @@ class Race:
                 sx = player_screen_x + random.randint(20, 80)
                 sy = player_lane_bottom + random.randint(-20, 5)
                 sr = random.randint(4, 12)
+
                 smoke_col = random.choice([(60, 60, 60), (80, 80, 80), (40, 40, 40)])
                 pygame.draw.circle(surface, smoke_col, (sx, sy), sr)

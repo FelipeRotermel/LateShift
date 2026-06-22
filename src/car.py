@@ -4,10 +4,10 @@ Implementa a classe Car que simula a física do motor (RPM, velocidade, acelera�
 """
 
 from src.constants import (
-    GEAR_NEUTRAL, GEAR_FIRST, GEAR_SECOND, GEAR_THIRD, GEAR_FOURTH,
-    GEAR_FIFTH, GEAR_SIXTH, GEAR_REVERSE,
-    GEAR_RATIOS, GEAR_SPEED_LIMITS,
-    RPM_IDLE, RPM_REDLINE, RPM_MAX, RPM_EXPLODE_TIME
+    GEAR_NEUTRAL, GEAR_FIRST, GEAR_SECOND, GEAR_THIRD,
+    GEAR_FOURTH, GEAR_FIFTH, GEAR_SIXTH, GEAR_REVERSE,
+    GEAR_RATIOS, GEAR_SPEED_LIMITS, RPM_IDLE,
+    RPM_REDLINE, RPM_MAX, RPM_EXPLODE_TIME
 )
 
 class Car:
@@ -27,9 +27,9 @@ class Car:
         self.torque_mult = config["torque"]
 
         # Variáveis físicas e de estado
-        self.speed = 0.0          # Velocidade atual em km/h
-        self.distance = 0.0       # Distância total percorrida na pista
-        self.rpm = 0.0            # Rotações Por Minuto do motor
+        self.speed = 0.0
+        self.distance = 0.0
+        self.rpm = 0.0
 
         # Estado dos controles/pedais
         self.gas_pressed = False
@@ -39,8 +39,8 @@ class Car:
         self.current_gear = GEAR_NEUTRAL
 
         # Estado de integridade do motor
-        self.redline_timer = 0.0   # Tempo acumulado no limite de rotação (redline)
-        self.engine_blown = False   # Indica se o motor explodiu
+        self.redline_timer = 0.0
+        self.engine_blown = False
 
         # Posição X na tela de corrida
         self.screen_x = 100.0
@@ -63,33 +63,28 @@ class Car:
         :param dt: Tempo delta em segundos desde o último frame
         """
         if self.engine_blown:
-            # Se o motor explodiu, o carro desacelera gradualmente e o RPM cai
             self.speed *= 0.96
             self.rpm = max(0, self.rpm - 3000 * dt)
             self.distance += self.speed * dt
             return
 
-        # 1. Atualiza as rotações por minuto (RPM)
         self._update_rpm(dt)
 
-        # 2. Verifica se o RPM ficou no limite de corte por muito tempo
         self._check_engine_explosion(dt)
 
-        # 3. Atualiza a velocidade do carro
         self._update_speed(dt)
 
-        # 4. Atualiza a distância percorrida
+        # Atualiza a distância percorrida
         self.distance += self.speed * dt
 
     def _update_rpm(self, dt):
         """Atualiza o RPM baseado na aceleração, embreagem e marcha"""
         if self.gas_pressed:
             if self.clutch_pressed or self.current_gear == GEAR_NEUTRAL:
-                # Com a embreagem pisada ou em ponto morto, o motor sobe giro livremente
                 self.rpm += 5000 * dt
             else:
                 # Engatado e acelerando: o RPM sobe dependendo do torque da marcha
-                # Marchas mais altas aceleram o motor mais devagar (relação física)
+                # Marchas mais altas aceleram o motor mais devagar
                 gear_rpm_mult = {
                     GEAR_FIRST: 1.0,
                     GEAR_SECOND: 0.85,
@@ -159,8 +154,7 @@ class Car:
                     rpm_efficiency *= max(0.7, 1.0 - (self.rpm - 5500) / 3000)
 
                 # Equação simplificada de aceleração
-                accel = (self.acceleration_base * self.torque_mult *
-                         gear_torque_mult * rpm_efficiency * 60 * dt)
+                accel = (self.acceleration_base * self.torque_mult * gear_torque_mult * rpm_efficiency * 60 * dt)
                 self.speed += accel
 
             # Perda de velocidade ao soltar o acelerador
@@ -181,8 +175,8 @@ class Car:
 
     def apply_grind_penalty(self):
         """Aplica uma penalidade física ao errar a marcha (arranhada de câmbio)"""
-        self.rpm *= 0.4      # Motor perde 60% do giro instantaneamente
-        self.speed *= 0.85   # O carro perde 15% de velocidade pelo tranco
+        self.rpm *= 0.4
+        self.speed *= 0.85
 
     @property
     def is_at_redline(self):

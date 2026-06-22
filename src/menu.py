@@ -40,16 +40,12 @@ class MainMenu:
         """
         surface.fill(DARK_BG)
 
-        # 1. Desenha linhas decorativas animadas no fundo
         self._draw_bg_lines(surface)
 
-        # 2. Desenha o título com brilho neon
         self._draw_title(surface)
 
-        # 3. Desenha as opções selecionáveis
         self._draw_options(surface)
 
-        # 4. Desenha o painel de controles e instruções
         self._draw_controls_panel(surface)
 
     def _draw_bg_lines(self, surface):
@@ -159,6 +155,7 @@ class MainMenu:
         hx = panel_x + 200
         hy = panel_y + 210
         sp = 18
+
         pygame.draw.line(surface, GRAY_MED, (hx - 3*sp, hy), (hx + 3*sp, hy), 2)
         pygame.draw.line(surface, GRAY_MED, (hx - 3*sp, hy), (hx - 3*sp, hy - sp), 2)  # R
         pygame.draw.line(surface, GRAY_MED, (hx - sp, hy - sp), (hx - sp, hy + sp), 2)  # 1/2

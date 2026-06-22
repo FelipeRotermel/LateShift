@@ -17,10 +17,10 @@ CAR_SPRITE_CONFIGS = {
         "folder": "Skyline",
         "body_file": "Skyline.png",
         "wheel_file": "Wheel.png",
-        "rear_x_from_left": 67,     # Pixels da borda esquerda até o centro da roda traseira
-        "rear_y_from_top": 2,       # Altura do chão até a roda traseira
-        "front_x_from_right": 63,   # Pixels da borda direita até o centro da roda dianteira
-        "front_y_from_top": 2,      # Altura do chão até a roda dianteira
+        "rear_x_from_left": 67,
+        "rear_y_from_top": 2,
+        "front_x_from_right": 63,
+        "front_y_from_top": 2,
     },
     CAR_HIGH_ACCEL: {
         "folder": "Dodge",
@@ -119,8 +119,8 @@ class SpriteGenerator:
 
     def __init__(self):
         """Carrega todos os carros ao inicializar"""
-        self.car_sprites = {}        # Sprites dinâmicos para a corrida
-        self.car_sprites_small = {}  # Sprites estáticos simples para o menu
+        self.car_sprites = {}
+        self.car_sprites_small = {}
         self._generate_all()
 
     def get_sprite(self, car_type):

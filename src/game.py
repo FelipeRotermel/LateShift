@@ -5,6 +5,7 @@ Implementa a classe Game que gerencia o loop do jogo, as transições de tela e 
 
 import pygame
 import sys
+import src.constants as const
 from src.constants import (
     SCREEN_WIDTH, SCREEN_HEIGHT, FPS, DARK_BG, RPM_MAX, STATE_MAIN_MENU, STATE_CAR_SELECT,
     STATE_STAGE_SELECT, STATE_COUNTDOWN, STATE_RACING, STATE_WIN, STATE_LOSE, CAR_BALANCED,
@@ -132,6 +133,7 @@ class Game:
     def _handle_car_select_event(self, event):
         """Lida com as teclas de seleção de carro"""
         car_types = [CAR_BALANCED, CAR_HIGH_ACCEL, CAR_TOP_SPEED]
+
         if event.key == pygame.K_1:
             self.selected_car_index = 0
             self.selected_car_type = car_types[0]
@@ -161,8 +163,10 @@ class Game:
             keys = pygame.key.get_pressed()
             clutch = keys[pygame.K_SPACE]
             gear_changed, error = self.shifter.handle_event(event, clutch)
+
             if error:
                 self.player_car.apply_grind_penalty()
+
             self.player_car.current_gear = self.shifter.current_gear
 
     def _handle_racing_event(self, event):
@@ -171,8 +175,10 @@ class Game:
             keys = pygame.key.get_pressed()
             clutch = keys[pygame.K_SPACE]
             gear_changed, error = self.shifter.handle_event(event, clutch)
+
             if error:
                 self.player_car.apply_grind_penalty()
+
             self.player_car.current_gear = self.shifter.current_gear
 
     def _handle_result_event(self, event):
@@ -219,18 +225,21 @@ class Game:
         if self.countdown_timer >= 1.0:
             self.countdown_timer = 0.0
             self.countdown_value -= 1
+
             if self.countdown_value > 0:
                 self.sound_manager.play("countdown_beep")
             else:
                 # Inicia a corrida ao bater o zero
                 self.sound_manager.play("countdown_go")
                 self.state = STATE_RACING
+
                 if self.ai_driver:
                     self.ai_driver.start_race()
 
     def _update_rpm_only(self, dt):
         """Aumenta/reduz apenas o RPM na largada, com risco de explodir o motor"""
         car = self.player_car
+
         if car.gas_pressed:
             if car.clutch_pressed or car.current_gear == GEAR_NEUTRAL:
                 car.rpm += 5000 * dt
@@ -252,6 +261,7 @@ class Game:
         # Se a corrida acabou de começar, atualiza o tempo de exibição do "GO!"
         if self.countdown_value == 0:
             self.countdown_timer += dt
+
             if self.countdown_timer >= 1.0:
                 self.countdown_value = -1
                 self.countdown_timer = 0.0
@@ -283,7 +293,7 @@ class Game:
         if ai_sprite:
             ai_sprite.update(dt, self.ai_driver.car.speed)
 
-        # Fim de jogo caso o motor do jogador exploda
+        # Fim de jogo caso o motor exploda
         if self.player_car.engine_blown:
             self.sound_manager.play("explosion")
             self.state = STATE_LOSE
@@ -302,25 +312,26 @@ class Game:
 
     def _draw(self):
         """Desenha a tela de acordo com o estado do jogo"""
-        if self.state == STATE_MAIN_MENU:
-            self.main_menu.draw(self.screen)
-        elif self.state == STATE_CAR_SELECT:
-            self.car_select_menu.draw(self.screen, self.selected_index_car())
-        elif self.state == STATE_STAGE_SELECT:
-            self.stage_select_menu.draw(self.screen)
-        elif self.state == STATE_COUNTDOWN:
-            self._draw_race_scene()
-            self.race_track.draw_countdown(self.screen, self.countdown_value)
-        elif self.state == STATE_RACING:
-            self._draw_race_scene()
-            if self.countdown_value == 0:
+        match self.state:
+            case const.STATE_MAIN_MENU:
+                self.main_menu.draw(self.screen)
+            case const.STATE_CAR_SELECT:
+                self.car_select_menu.draw(self.screen, self.selected_index_car())
+            case const.STATE_STAGE_SELECT:
+                self.stage_select_menu.draw(self.screen)
+            case const.STATE_COUNTDOWN:
+                self._draw_race_scene()
                 self.race_track.draw_countdown(self.screen, self.countdown_value)
-        elif self.state == STATE_WIN:
-            self._draw_race_scene()
-            self.race_track.draw_result(self.screen, won=True)
-        elif self.state == STATE_LOSE:
-            self._draw_race_scene()
-            self.race_track.draw_result(self.screen, won=False, engine_blown=self.player_car.engine_blown if self.player_car else False)
+            case const.STATE_RACING:
+                self._draw_race_scene()
+                if self.countdown_value == 0:
+                    self.race_track.draw_countdown(self.screen, self.countdown_value)
+            case const.STATE_WIN:
+                self._draw_race_scene()
+                self.race_track.draw_result(self.screen, won=True)
+            case const.STATE_LOSE:
+                self._draw_race_scene()
+                self.race_track.draw_result(self.screen, won=False, engine_blown=self.player_car.engine_blown if self.player_car else False)
 
     def selected_index_car(self):
         """Auxiliar didático para retornar o índice do carro selecionado"""

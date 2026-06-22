@@ -40,6 +40,7 @@ for name, path in cars:
     for x in range(min_x, max_x + 1):
         has_content_above = False
         has_transparency_below = False
+
         for y in range(mid_y, bottom_y + 1):
             a = img.get_at((x, y))[3]
             if a > 0:
@@ -47,6 +48,7 @@ for name, path in cars:
             elif has_content_above and a == 0:
                 has_transparency_below = True
                 break
+
         if has_transparency_below:
             wheel_cols.append(x)
     

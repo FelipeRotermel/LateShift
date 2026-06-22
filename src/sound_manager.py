@@ -66,6 +66,7 @@ class SoundManager:
             5: "fifthGear.mp3",
             6: "sixthGear.mp3",
         }
+
         return mapping.get(gear, "")
 
     def play(self, sound_name):
@@ -83,15 +84,18 @@ class SoundManager:
             if self.engine_channel.get_busy():
                 self.engine_channel.stop()
                 self.current_playing_gear = None
+
             return
 
         # Se mudou de marcha ou o som estava parado
         if self.current_playing_gear != gear:
             sound = self.gear_sounds.get(gear)
+
             if sound:
                 # Para o som anterior se houver
                 if self.engine_channel.get_busy():
                     self.engine_channel.stop()
+
                 # Toca o novo som em loop (-1 indica reprodução contínua)
                 self.engine_channel.play(sound, loops=-1)
                 self.current_playing_gear = gear
@@ -100,6 +104,7 @@ class SoundManager:
         """Interrompe qualquer som de motor em reprodução"""
         if self.engine_channel.get_busy():
             self.engine_channel.stop()
+
         self.current_playing_gear = None
 
     def set_volume(self, volume):
